@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "id": "dafeiyu-p2",
+  "name": "大肥鱼 P2（干饭）",
+  "names": [
+    "大肥鱼",
+    "肥鱼",
+    "鲸鱼娘",
+    "鲸鱼",
+    "DeepSeek",
+    "deepseek",
+    "ds"
+  ],
+  "voice": "zh_female_mengyatou_uranus_bigtts",
+  "renderer": "image",
+  "image": {
+    "size": [
+      875,
+      1494
+    ],
+    "idle": "idle.webp",
+    "moods": {
+      "throw-bowl": "throw-bowl-12.webp",
+      "laugh": "laugh-12.webp",
+      "shy": "shy.webp",
+      "shocked": "shocked.webp",
+      "sad": "sad.webp",
+      "think": "think.webp",
+      "angry": "angry.webp",
+      "eat": "eat-12.webp"
+    },
+    "frames": {
+      "throw-bowl": [
+        "throw-bowl-1.webp",
+        "throw-bowl-2.webp",
+        "throw-bowl-3.webp",
+        "throw-bowl-4.webp",
+        "throw-bowl-5.webp",
+        "throw-bowl-6.webp",
+        "throw-bowl-7.webp",
+        "throw-bowl-8.webp",
+        "throw-bowl-9.webp",
+        "throw-bowl-10.webp",
+        "throw-bowl-11.webp",
+        "throw-bowl-12.webp"
+      ],
+      "eat": [
+        "eat-1.webp",
+        "eat-2.webp",
+        "eat-3.webp",
+        "eat-4.webp",
+        "eat-5.webp",
+        "eat-6.webp",
+        "eat-7.webp",
+        "eat-8.webp",
+        "eat-9.webp",
+        "eat-10.webp",
+        "eat-11.webp",
+        "eat-12.webp"
+      ],
+      "laugh": [
+        "laugh-1.webp",
+        "laugh-2.webp",
+        "laugh-3.webp",
+        "laugh-4.webp",
+        "laugh-5.webp",
+        "laugh-6.webp",
+        "laugh-7.webp",
+        "laugh-8.webp",
+        "laugh-9.webp",
+        "laugh-10.webp",
+        "laugh-11.webp",
+        "laugh-12.webp"
+      ]
+    },
+    "videos": {
+      "throw-bowl": "throw-bowl.webm",
+      "eat": "eat.webm",
+      "laugh": "laugh.webm"
+    }
+  },
+  "art": {
+    "portrait": "art/portrait.webp"
+  },
+  "license": "CC BY-NC-SA 4.0（派生自 dafeiyu 素材）",
+  "reactions": {
+    "gift.huge": "throw-bowl",
+    "superchat.big": "throw-bowl",
+    "gift.big": "throw-bowl",
+    "gift.small": "eat",
+    "follow": "laugh"
+  }
+}
