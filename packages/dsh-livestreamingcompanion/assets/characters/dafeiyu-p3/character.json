@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "id": "dafeiyu-p3",
+  "name": "大肥鱼 P3（宝剑）",
+  "names": [
+    "大肥鱼",
+    "肥鱼",
+    "鲸鱼娘",
+    "鲸鱼",
+    "DeepSeek",
+    "deepseek",
+    "ds"
+  ],
+  "voice": "zh_female_mengyatou_uranus_bigtts",
+  "renderer": "image",
+  "image": {
+    "size": [
+      847,
+      1533
+    ],
+    "idle": "idle.webp",
+    "moods": {
+      "sword-slash": "sword-slash-12.webp",
+      "laugh": "laugh-12.webp",
+      "shy": "shy.webp",
+      "shocked": "shocked.webp",
+      "sad": "sad.webp",
+      "think": "think.webp",
+      "angry": "angry.webp",
+      "eat": "eat-12.webp"
+    },
+    "frames": {
+      "sword-slash": [
+        "sword-slash-1.webp",
+        "sword-slash-2.webp",
+        "sword-slash-3.webp",
+        "sword-slash-4.webp",
+        "sword-slash-5.webp",
+        "sword-slash-6.webp",
+        "sword-slash-7.webp",
+        "sword-slash-8.webp",
+        "sword-slash-9.webp",
+        "sword-slash-10.webp",
+        "sword-slash-11.webp",
+        "sword-slash-12.webp"
+      ],
+      "eat": [
+        "eat-1.webp",
+        "eat-2.webp",
+        "eat-3.webp",
+        "eat-4.webp",
+        "eat-5.webp",
+        "eat-6.webp",
+        "eat-7.webp",
+        "eat-8.webp",
+        "eat-9.webp",
+        "eat-10.webp",
+        "eat-11.webp",
+        "eat-12.webp"
+      ],
+      "laugh": [
+        "laugh-1.webp",
+        "laugh-2.webp",
+        "laugh-3.webp",
+        "laugh-4.webp",
+        "laugh-5.webp",
+        "laugh-6.webp",
+        "laugh-7.webp",
+        "laugh-8.webp",
+        "laugh-9.webp",
+        "laugh-10.webp",
+        "laugh-11.webp",
+        "laugh-12.webp"
+      ]
+    },
+    "videos": {
+      "sword-slash": "sword-slash.webm",
+      "eat": "eat.webm",
+      "laugh": "laugh.webm"
+    }
+  },
+  "art": {
+    "portrait": "art/portrait.webp"
+  },
+  "license": "CC BY-NC-SA 4.0（派生自 dafeiyu 素材）",
+  "reactions": {
+    "gift.huge": "sword-slash",
+    "superchat.big": "sword-slash",
+    "gift.big": "sword-slash",
+    "gift.small": "eat",
+    "follow": "laugh"
+  }
+}
