@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "id": "dafeiyu",
+  "name": "大肥鱼 P1（动态立绘）",
+  "names": [
+    "大肥鱼",
+    "肥鱼",
+    "鲸鱼娘",
+    "鲸鱼",
+    "DeepSeek",
+    "deepseek",
+    "ds"
+  ],
+  "voice": "zh_female_mengyatou_uranus_bigtts",
+  "renderer": "clips",
+  "art": {
+    "rice": "art/rice.webm",
+    "sleep": "art/sleep.webp",
+    "wave": "art/wave.webp",
+    "laptop": "art/laptop.webm",
+    "gift": "art/gift.webp",
+    "kv": "art/kv.jpg",
+    "waiting": "art/waiting.jpg",
+    "updating": "art/updating.jpg",
+    "ending": "art/ending.jpg",
+    "portrait": "art/portrait.webp"
+  },
+  "reactions": {
+    "gift.big": "shy",
+    "gift.huge": "laugh",
+    "superchat.big": "shocked",
+    "membership": "shocked"
+  },
+  "license": "CC BY-NC-SA 4.0（见 LICENSE.md）",
+  "clips": {
+    "size": [
+      496,
+      864
+    ],
+    "idle": "riceloop.webm",
+    "talk": "ricetalk.webm",
+    "out": "rice-exit.webm",
+    "in": "rice-enter.webm",
+    "graph": "transitions.json",
+    "moods": {
+      "laugh": "laugh.webm",
+      "shocked": "shocked.webm",
+      "scared": "scared.webm",
+      "sad": "sad.webm",
+      "think": "think.webm",
+      "angry": "angry.webm",
+      "shy": "shy.webm"
+    }
+  }
+}
