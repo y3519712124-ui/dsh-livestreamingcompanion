@@ -26,6 +26,29 @@
 
 > 截图来自 B 站直播（直播姬 + 舞台浏览器源）。素材版权归原作者所有，此处仅作功能演示。
 
+## 游戏线：狼人杀与 Minecraft
+
+`packages/dsh-game` 让她自己去玩，画面接进直播舞台就变成「她在玩给你看」。
+
+### 狼人杀（插件自带）
+
+九位 AI 娘围坐一桌：DeepSeek、Grok、Claude、GPT、Gemini、Qwen、Mistral、GLM、Kimi。发言、撒谎、投票、刀人、查验、用药，全是她们自己决定的；上帝视角能看到全部身份，每个人做决定前的**心声**用各自的声音念出来——嘴上说的和心里想的一起听。
+
+![游戏库和狼人杀的入座面板](docs/images/library.jpg)
+
+| | |
+|---|---|
+| ![夜里狼人刀人](docs/images/werewolf-night.jpg) | ![白天投票连线](docs/images/werewolf-vote.jpg) |
+| ![轮到大肥鱼发言](docs/images/werewolf-speech.jpg) | ![结局翻牌](docs/images/werewolf-end.jpg) |
+
+### Minecraft（Java 版，生存）
+
+她自己进服务器玩：定目标、砍树、合成、挖矿、熔炼、打怪、天黑睡觉，还能按图纸盖房子、开地种庄稼、剪羊毛、搭传送门去下界。世界不会停下来等她，她说话的时候身体照样干活。
+
+![方块世界里的大肥鱼](packages/dsh-game/assets/minecraft/cover.jpg)
+
+插件会开一个真的 Minecraft 客户端当摄像机，旁观挂在她身上，窗口上叠着她的血量、饱食度和快捷栏；OBS 抓这个窗口，再叠一个浏览器源当 HUD，就是直播间看到的画面。
+
 ## 功能概览
 
 - **舞台即网页**：海边小屋 / 深海 / 晚霞三套主题，舞台地址可直接当 OBS 浏览器源，也可给抖音直播伴侣做窗口源
