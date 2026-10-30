@@ -1,0 +1,11 @@
+node_modules/
+lib/
+dist/
+*.log
+.DS_Store
+Thumbs.db
+tools/.gen/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example

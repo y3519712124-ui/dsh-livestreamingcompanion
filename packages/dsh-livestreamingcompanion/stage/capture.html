@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dsh-livestreamingcompanion 采集</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; gap: 12px;
+         padding: 16px; background: #11141a; color: #e6e9f0;
+         font: 14px/1.6 "Microsoft YaHei", system-ui, sans-serif; }
+  h1 { font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px; }
+  h1 em { font-style: normal; font-size: 12px; color: #8b93a7; font-weight: 400; }
+  .stage { position: relative; flex: 1; min-height: 320px; border-radius: 12px; overflow: hidden;
+           background: #000; border: 1px solid #232833; display: flex; align-items: center; justify-content: center; }
+  canvas { max-width: 100%; max-height: 72vh; display: block; }
+  .hint { position: absolute; inset: auto 0 0 0; padding: 6px 10px; font-size: 12px;
+          color: #cfd6e6; background: linear-gradient(transparent, rgba(0,0,0,.65)); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  button { padding: 8px 14px; border-radius: 9px; border: 1px solid #2c3340; background: #1b202b;
+           color: #e6e9f0; cursor: pointer; font-size: 13px; }
+  button:hover { background: #232a37; }
+  button.on { background: #3b6ef6; border-color: #3b6ef6; color: #fff; font-weight: 600; }
+  button:disabled { opacity: .45; cursor: default; }
+  #status { font-size: 12px; color: #8b93a7; }
+  .bad { color: #ff8a8a; }
+  .good { color: #7ee787; }
+</style>
+</head>
+<body>
+<h1>直播画面 <em>浏览器采集 · 采到的画面直接推给插件里的 ffmpeg</em></h1>
+<div class="stage">
+  <canvas id="canvas" width="1280" height="720"></canvas>
+  <div class="hint" id="hint">还没开始：点下面「摄像头」或「屏幕」</div>
+</div>
+<div class="row">
+  <button id="cam">摄像头</button>
+  <button id="screen">屏幕直播</button>
+  <button id="stop" disabled>停止</button>
+  <button id="pip" class="on" disabled>画中画：开</button>
+  <span id="status">未采集</span>
+</div>
+
+<script>
+(function () {
+  const token = new URLSearchParams(location.search).get('token') || '';
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const hint = document.getElementById('hint');
+  const status = document.getElementById('status');
+  const camBtn = document.getElementById('cam');
+  const screenBtn = document.getElementById('screen');
+  const stopBtn = document.getElementById('stop');
+  const pipBtn = document.getElementById('pip');
+
+  let cam = null, screen = null, rec = null, raf = 0, pip = true, chunks = 0, bytes = 0;
+
+  const setHint = (text, cls) => { hint.textContent = text; hint.className = 'hint' + (cls ? ' ' + cls : ''); };
+  const setStatus = (text, cls) => { status.textContent = text; status.className = cls || ''; };
+
+  const videos = { cam: document.createElement('video'), screen: document.createElement('video') };
+  Object.values(videos).forEach((v) => { v.muted = true; v.playsInline = true; v.autoplay = true; });
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+    if (screen && screen.videoWidth) {
+      const s = Math.max(W / screen.videoWidth, H / screen.videoHeight);
+      const sw = screen.videoWidth * s, sh = screen.videoHeight * s;
+      ctx.drawImage(screen, (W - sw) / 2, (H - sh) / 2, sw, sh);
+    }
+    if (cam && cam.videoWidth) {
+      if (screen && pip) {
+        const d = Math.round(H * 0.28);
+        const x = W - d - 28, y = H - d - 28;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x + d / 2, y + d / 2, d / 2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        const s = Math.max(d / cam.videoWidth, d / cam.videoHeight);
+        ctx.drawImage(cam, x + (d - cam.videoWidth * s) / 2, y + (d - cam.videoHeight * s) / 2, cam.videoWidth * s, cam.videoHeight * s);
+        ctx.restore();
+        ctx.beginPath();
+        ctx.arc(x + d / 2, y + d / 2, d / 2, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,.85)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      } else if (!screen) {
+        const s = Math.max(W / cam.videoWidth, H / cam.videoHeight);
+        ctx.drawImage(cam, (W - cam.videoWidth * s) / 2, (H - cam.videoHeight * s) / 2, cam.videoWidth * s, cam.videoHeight * s);
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  function startRecording() {
+    if (rec) return;
+    const stream = canvas.captureStream(30);
+    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')
+      ? 'video/webm;codecs=vp8,opus' : 'video/webm';
+    rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 3_500_000 });
+    rec.ondataavailable = (event) => {
+      if (!event.data.size) return;
+      chunks += 1;
+      bytes += event.data.size;
+      event.data.arrayBuffer().then((buf) => fetch('/capture?token=' + encodeURIComponent(token), {
+        method: 'POST',
+        headers: { 'content-type': 'application/octet-stream' },
+        body: buf,
+      })).catch(() => {});
+      setStatus('已发送 ' + chunks + ' 片 · ' + (bytes / 1048576).toFixed(1) + 'MB', 'good');
+    };
+    rec.start(800);
+  }
+
+  async function openCamera() {
+    try {
+      cam = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true });
+      videos.cam.srcObject = cam;
+      await videos.cam.play().catch(() => {});
+      setHint('摄像头已打开（有声音）');
+      startRecording();
+      draw();
+      stopBtn.disabled = false;
+      pipBtn.disabled = !screen;
+      camBtn.classList.add('on');
+    } catch (err) {
+      setHint('摄像头打不开：' + (err && err.message ? err.message : err), 'bad');
+    }
+  }
+
+  async function openScreen() {
+    try {
+      screen = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: true });
+      videos.screen.srcObject = screen;
+      await videos.screen.play().catch(() => {});
+      screen.getVideoTracks()[0].addEventListener('ended', () => stopAll());
+      if (!cam) {
+        try {
+          cam = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: true });
+          videos.cam.srcObject = cam;
+          await videos.cam.play().catch(() => {});
+        } catch (e) { /* 没摄像头也能只推屏幕 */ }
+      }
+      setHint('屏幕已捕获' + (cam ? '（右下角画中画是摄像头）' : ''));
+      startRecording();
+      draw();
+      stopBtn.disabled = false;
+      pipBtn.disabled = false;
+      screenBtn.classList.add('on');
+    } catch (err) {
+      setHint('屏幕捕获失败：' + (err && err.message ? err.message : err), 'bad');
+    }
+  }
+
+  function stopAll() {
+    if (rec && rec.state !== 'inactive') rec.stop();
+    rec = null;
+    cancelAnimationFrame(raf);
+    raf = 0;
+    [cam, screen].forEach((s) => s && s.getTracks().forEach((t) => t.stop()));
+    cam = screen = null;
+    [camBtn, screenBtn].forEach((b) => b.classList.remove('on'));
+    stopBtn.disabled = true;
+    pipBtn.disabled = true;
+    setHint('已停止');
+    setStatus('未采集');
+  }
+
+  camBtn.addEventListener('click', openCamera);
+  screenBtn.addEventListener('click', openScreen);
+  stopBtn.addEventListener('click', stopAll);
+  pipBtn.addEventListener('click', () => { pip = !pip; pipBtn.textContent = '画中画：' + (pip ? '开' : '关'); pipBtn.classList.toggle('on', pip); });
+  window.addEventListener('beforeunload', () => { if (rec && rec.state !== 'inactive') rec.stop(); });
+})();
+</script>
+</body>
+</html>
